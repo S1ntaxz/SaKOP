@@ -13,6 +13,7 @@ SaKOP, or Sangguniang Kabataan Online Platform, is a web-based system designed t
 # System Features
 
 - **User Interface**
+- **Dashboard**
 - **Account Management**
 - **Members Info**
 - **Program Recommendation**
