@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($password === $stored_password_user) {
             // Password is correct, set session variables
             $_SESSION['email'] = $email;
-            header("Location: index.php"); // Redirect to welcome page for admin
+            header("Location: dashboard.php"); // Redirect to welcome page for admin
             exit();
         } else {
             // Invalid password for admin

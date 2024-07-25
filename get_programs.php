@@ -26,37 +26,37 @@ if (isset($_SESSION['email']) && isset($_SESSION['userid'])) {
 
     if ($kk_count >= 1 && $kk_count <= 5) {
         $programs = [
-            'Program A',
-            'Program B',
-            'Program C',
-            'Program D',
-            'Program E'
+            'Youth Leadership Training',
+            'Environmental Clean-Up Drives',
+            'Sports Festivals',
+            'Community Health Awareness',
+            'Youth Entrepreneurship Workshops'
         ];
     } elseif ($kk_count >= 6 && $kk_count <= 10) {
         $programs = [
-            'Program F',
-            'Program G',
-            'Program H',
-            'Program I',
-            'Program J'
+            'Talent Shows',
+            'Cultural Festivals',
+            'Educational Tutoring Programs',
+            'Anti-Drug Campaigns',
+            'Career Guidance Sessions'
         ];
     } elseif ($kk_count >= 11 && $kk_count <= 20) {
         $programs = [
-            'Program K',
-            'Program L',
-            'Program M',
-            'Program N',
-            'Program O'
+            'Arts and Crafts Workshops',
+            'Disaster Preparedness Training',
+            'Digital Literacy Courses',
+            'Community Service Projects',
+            'Book Drives and Reading Programs'
         ];
     } else {
         $programs = [
-            'Program P',
-            'Program Q',
-            'Program R',
-            'Program S',
-            'Program T'
+            'Music and Dance Classes',
+            'Youth Forum Discussions',
+            'Summer Camps',
+            'Parenting Workshops',
+            'Food Drives and Charity Events'
         ];
-    }
+    }    
 
     // Fetch pending programs
     $sql_pending = "SELECT * FROM programs WHERE status = 'Pending' AND sk_chairman_id = ?";

@@ -173,10 +173,10 @@ $conn->close();
                         </li>
                     </ul>
                 </div>
-                <a href="settings.php" class="btn-download" id="addMemberBtn" input type="submit">
+                <!--<a href="settings.php" class="btn-download" id="addMemberBtn" input type="submit">
                     <i class='bx bxs-cloud-download' type="submit"></i>
                     <span class="text">Save</span>
-                </a>
+                </a>-->
             </div>
             
             <div class="container">

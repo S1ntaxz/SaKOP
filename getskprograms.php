@@ -21,31 +21,19 @@ if ($conn->connect_error) {
     exit();
 }
 
-// Get SK Chairman ID from request
-$skChairmanId = isset($_GET['sk_chairman_id']) ? intval($_GET['sk_chairman_id']) : 0;
-
-if ($skChairmanId <= 0) {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid SK Chairman ID']);
-    exit();
-}
-
-// Fetch programs with barangay details
+// Fetch all programs with barangay details
 $sql = "
     SELECT p.*, s.barangay
     FROM programs p
-    JOIN sk_chairman s ON p.sk_chairman_id = s.id
-    WHERE p.sk_chairman_id = ?
+    JOIN skchairman s ON p.sk_chairman_id = s.id
     ORDER BY p.date_ended DESC
 ";
-$stmt = $conn->prepare($sql);
-if ($stmt === false) {
-    echo json_encode(['status' => 'error', 'message' => 'SQL prepare error: ' . $conn->error]);
+$result = $conn->query($sql);
+
+if ($result === false) {
+    echo json_encode(['status' => 'error', 'message' => 'SQL query error: ' . $conn->error]);
     exit();
 }
-
-$stmt->bind_param("i", $skChairmanId);
-$stmt->execute();
-$result = $stmt->get_result();
 
 // Fetch all programs
 $programs = [];
@@ -57,6 +45,5 @@ while ($row = $result->fetch_assoc()) {
 echo json_encode(['status' => 'success', 'programs' => $programs]);
 
 // Close the connection
-$stmt->close();
 $conn->close();
 ?>

@@ -10,6 +10,48 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="head.png" type="image/x-icon">
     <title>SaKOP</title>
+
+    <style>
+        .search-container {
+            margin: 20px;
+            text-align: right;
+        }
+
+        #searchInput {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 250px;
+        }
+
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            padding: 10px 15px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #333;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .pagination a:hover {
+            background-color: #ddd;
+        }
+
+        /* Add any additional CSS for the table or modal as needed */
+    </style>
 </head>
 <body>
 
@@ -42,6 +84,11 @@
                 </div>
             </div>
 
+            <!-- Search Bar -->
+            <div class="search-container"> 
+                <input type="text" id="searchInput" placeholder="Search Barangay" class="form-control">
+            </div>
+
             <!-- All Transactions Table -->
             <div class="table-data">
                 <div class="order">
@@ -69,11 +116,24 @@
                                 die("Connection failed: " . $conn->connect_error);
                             }
 
+                            // Pagination variables
+                            $rows_per_page = 10;
+                            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                            $offset = ($page - 1) * $rows_per_page;
+
                             // Fetch barangay, remaining budget and last updated date
                             $sql = "SELECT skchairman.barangay, budget_info.remaining_budget, budget_info.updated_at 
                                     FROM budget_info 
-                                    JOIN skchairman ON budget_info.sk_chairman_id = skchairman.id";
+                                    JOIN skchairman ON budget_info.sk_chairman_id = skchairman.id
+                                    LIMIT $offset, $rows_per_page";
                             $result = $conn->query($sql);
+
+                            // Fetch total number of rows for pagination
+                            $total_rows_sql = "SELECT COUNT(*) AS total FROM budget_info 
+                                              JOIN skchairman ON budget_info.sk_chairman_id = skchairman.id";
+                            $total_rows_result = $conn->query($total_rows_sql);
+                            $total_rows = $total_rows_result->fetch_assoc()['total'];
+                            $total_pages = ceil($total_rows / $rows_per_page);
 
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
@@ -94,6 +154,22 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Pagination Controls -->
+            <div class="pagination">
+                <?php if ($page > 1): ?>
+                    <a href="?page=<?php echo $page - 1; ?>">&laquo; Previous</a>
+                <?php endif; ?>
+
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <a href="?page=<?php echo $i; ?>"<?php if ($i == $page) echo ' class="active"'; ?>><?php echo $i; ?></a>
+                <?php endfor; ?>
+
+                <?php if ($page < $total_pages): ?>
+                    <a href="?page=<?php echo $page + 1; ?>">Next &raquo;</a>
+                <?php endif; ?>
+            </div>
+
         </main>
         <!-- MAIN -->
 
@@ -150,6 +226,21 @@
             // Example: window.open(filePath, '_blank');
             alert('Opening receipt in a new window: ' + filePath);
         }
+
+        // Live search functionality
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            var searchQuery = this.value.toLowerCase();
+            var tableRows = document.querySelectorAll('.table-data table tbody tr');
+
+            tableRows.forEach(row => {
+                var barangay = row.cells[0].textContent.toLowerCase();
+                if (barangay.includes(searchQuery)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
     </script>
     <script src="script.js"></script>
 </body>

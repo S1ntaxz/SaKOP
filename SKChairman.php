@@ -36,24 +36,24 @@ function fetchAvailableBarangays($conn, $currentBarangay = null) {
     $allBarangays = [
         "Aga", "Balaytigue", "Balok-Balok", "Banilad", "Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4", "Barangay 5", "Barangay 6", "Barangay 7", "Barangay 8", "Barangay 9", "Barangay 10", "Barangay 11", "Barangay 12", "Bilaran", "Bucana", "Bulihan", "Bunducan", "Butucan", "Calayo", "Catandaan", "Cogunan", "Dayap", "Kayrilaw", "Kaylaway", "Latag", "Looc", "Lumbangan", "Malapad Na Bato", "Mataas Na Pulo", "Maugat", "Munting Indang", "Natipuan", "Pantalan", "Papaya", "Putat", "Reparo", "Talangan", "Tumalim", "Utod", "Wawa"
     ];
-    
+   
     $sql = "SELECT DISTINCT barangay FROM skchairman";
     $result = $conn->query($sql);
-    
+   
     $existingBarangays = [];
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $existingBarangays[] = $row['barangay'];
         }
     }
-    
+   
     // Remove the current barangay from the list if it exists
     if ($currentBarangay !== null) {
         $existingBarangays = array_filter($existingBarangays, function($barangay) use ($currentBarangay) {
             return $barangay !== $currentBarangay;
         });
     }
-    
+   
     return array_diff($allBarangays, $existingBarangays);
 }
 
@@ -116,7 +116,7 @@ $maritalStatuses = ['Single', 'Married', 'Widowed', 'Separated'];
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="head.png" type="image/x-icon">
     <title>SaKOP</title>
-    
+   
     <style>
         /* Additional styles for modal */
         .modal {
@@ -223,214 +223,229 @@ $maritalStatuses = ['Single', 'Married', 'Widowed', 'Separated'];
             </div>
 
             <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Search by name or barangay..." class="form-control">
-                <button id="searchBtn">Search</button>
+                <input type="text" id="searchInput" placeholder="Search by name or barangay..." class="form-control" value="<?php echo htmlspecialchars($search); ?>">
             </div>
 
             <div class="table-data">
                 <div class="order">
-            <table id="skChairmanTable">
-    <thead>
-        <tr>
-            <th>First Name</th>
-            <th>Middle Name</th>
-            <th>Last Name</th>
-            <th>Age</th>
-            <th>Barangay</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        // Loop through data fetched from the database
-        if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                $age = calculateAge($row['birthday']);
-                echo "<tr data-id='" . $row['id'] . "' data-firstname='" . htmlspecialchars($row['firstname']) . "' data-middlename='" . htmlspecialchars($row['middlename']) . "' data-lastname='" . htmlspecialchars($row['lastname']) . "' data-birthday='" . htmlspecialchars($row['birthday']) . "' data-address='" . htmlspecialchars($row['address']) . "' data-marital_status='" . htmlspecialchars($row['marital_status']) . "' data-barangay='" . htmlspecialchars($row['barangay']) . "' data-contact_number='" . htmlspecialchars($row['contact_number']) . "' data-email='" . htmlspecialchars($row['email']) . "' data-gender='" . htmlspecialchars($row['gender']) . "'>";
-                echo "<td>" . htmlspecialchars($row['firstname']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['middlename']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['lastname']) . "</td>";
-                echo "<td>" . $age . "</td>";
-                echo "<td>" . htmlspecialchars($row['barangay']) . "</td>";
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr><td colspan='5'>No data available</td></tr>";
-        }
-        ?>
-    </tbody>
-</table>
-</div>
+                    <table id="skChairmanTable">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Middle Name</th>
+                                <th>Last Name</th>
+                                <th>Barangay</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php while ($row = $result->fetch_assoc()): ?>
+                            <tr data-id="<?php echo $row['id']; ?>"
+                                data-firstname="<?php echo htmlspecialchars($row['firstname']); ?>"
+                                data-middlename="<?php echo htmlspecialchars($row['middlename']); ?>"
+                                data-lastname="<?php echo htmlspecialchars($row['lastname']); ?>"
+                                data-birthday="<?php echo htmlspecialchars($row['birthday']); ?>"
+                                data-address="<?php echo htmlspecialchars($row['address']); ?>"
+                                data-marital_status="<?php echo htmlspecialchars($row['marital_status']); ?>"
+                                data-barangay="<?php echo htmlspecialchars($row['barangay']); ?>"
+                                data-contact_number="<?php echo htmlspecialchars($row['contact_number']); ?>"
+                                data-email="<?php echo htmlspecialchars($row['email']); ?>"
+                                data-gender="<?php echo htmlspecialchars($row['gender']); ?>">
+                                <td><?php echo htmlspecialchars($row['firstname']); ?></td>
+                                <td><?php echo htmlspecialchars($row['middlename']); ?></td>
+                                <td><?php echo htmlspecialchars($row['lastname']); ?></td>
+                                <td><?php echo htmlspecialchars($row['barangay']); ?></td>
+                                <td>
+                                    <!--<a href="javascript:void(0)" class="edit" title="Edit" data-id="<?php echo $row['id']; ?>"><i class='bx bxs-edit'></i></a>-->
+                                    <a href="delete_member.php?id=<?php echo $row['id']; ?>" class="delete" title="Delete" onclick="return confirm('Are you sure you want to delete this member?');"><i class='bx bxs-trash'></i></a>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <!-- Pagination -->
             <div class="pagination">
+                <?php if ($page > 1): ?>
+                    <a href="?search=<?php echo urlencode($search); ?>&page=<?php echo $page - 1; ?>">Previous</a>
+                <?php endif; ?>
                 <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                    <a href="?page=<?php echo $i; ?>&search=<?php echo $search; ?>" class="<?php if ($i == $page) echo 'active'; ?>"><?php echo $i; ?></a>
+                    <a href="?search=<?php echo urlencode($search); ?>&page=<?php echo $i; ?>" class="<?php echo $i === $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
                 <?php endfor; ?>
+                <?php if ($page < $totalPages): ?>
+                    <a href="?search=<?php echo urlencode($search); ?>&page=<?php echo $page + 1; ?>">Next</a>
+                <?php endif; ?>
             </div>
-
-            <!-- Edit Member Modal -->
-            <div id="editMemberModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Edit SK Chairman</h2>
-        <form id="editMemberForm" method="post">
-            <input type="hidden" id="editId" name="id">
-            <div class="form-group">
-                <label for="editFirstname">First Name:</label>
-                <input type="text" id="editFirstname" name="firstname" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="editMiddlename">Middle Name:</label>
-                <input type="text" id="editMiddlename" name="middlename" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="editLastname">Last Name:</label>
-                <input type="text" id="editLastname" name="lastname" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="editBirthday">Birthday:</label>
-                <input type="date" id="editBirthday" name="birthday" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="editAddress">Address:</label>
-                <input type="text" id="editAddress" name="address" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="editMaritalStatus">Marital Status:</label>
-                <select id="editMaritalStatus" name="marital_status" class="form-control" required>
-                    <?php foreach ($maritalStatuses as $status): ?>
-                        <option value="<?php echo htmlspecialchars($status); ?>" 
-                                <?php echo ($status === $currentMaritalStatus) ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($status); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="editBarangay">Barangay:</label>
-                <select id="editBarangay" name="barangay" class="form-control" required>
-                    <?php if (empty($available_barangays)): ?>
-                        <option value="" disabled>All barangays have entries</option>
-                    <?php else: ?>
-                        <option value="" disabled selected>Select Barangay</option>
-                        <?php foreach ($available_barangays as $barangay): ?>
-                    <option value="<?php echo htmlspecialchars($barangay); ?>" 
-                        <?php echo ($barangay === $currentBarangay) ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars($barangay); ?>
-                </option>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </select>
-</div>
-            <div class="form-group">
-                <label for="editContactNumber">Contact Number:</label>
-                <input type="text" id="editContactNumber" name="contact_number" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="editEmail">Email:</label>
-                <input type="email" id="editEmail" name="email" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="editGender">Gender:</label>
-                <select id="editGender" name="gender" class="form-control" required>
-                    <option value="Male" <?php echo ($currentGender === 'Male') ? 'selected' : ''; ?>>Male</option>
-                    <option value="Female" <?php echo ($currentGender === 'Female') ? 'selected' : ''; ?>>Female</option>
-                </select>
-            </div>
-            <div class="btn-group">
-                <button type="submit">Save changes</button>
-                <button type="button" id="cancelBtn">Cancel</button>
-            </div>
-        </form>
-    </div>
-</div>
-            <!-- Edit Member Modal -->
-            <!-- Edit Member Modal -->
-
         </main>
         <!-- MAIN -->
     </section>
     <!-- CONTENT -->
 
-    <!-- Scripts -->
+    <!-- EDIT MODAL -->
+    <div id="editMemberModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Member</h2>
+            <form id="editMemberForm">
+                <input type="hidden" id="editId" name="id">
+                <div class="form-group">
+                    <label for="editFirstname">First Name</label>
+                    <input type="text" id="editFirstname" name="firstname" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editMiddlename">Middle Name</label>
+                    <input type="text" id="editMiddlename" name="middlename" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="editLastname">Last Name</label>
+                    <input type="text" id="editLastname" name="lastname" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editBirthday">Birthday</label>
+                    <input type="date" id="editBirthday" name="birthday" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editAddress">Address</label>
+                    <input type="text" id="editAddress" name="address" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editGender">Gender</label>
+                    <select id="editGender" name="gender" class="form-control" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editMaritalStatus">Marital Status</label>
+                    <select id="editMaritalStatus" name="marital_status" class="form-control" required>
+                        <?php foreach ($maritalStatuses as $status): ?>
+                            <option value="<?php echo $status; ?>"><?php echo $status; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editBarangay">Barangay</label>
+                    <select id="editBarangay" name="barangay" class="form-control" required>
+                        <?php foreach ($availableBarangays as $barangay): ?>
+                            <option value="<?php echo $barangay; ?>"><?php echo $barangay; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editContactNumber">Contact Number</label>
+                    <input type="tel" id="editContactNumber" name="contact_number" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" name="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editGender">Gender</label>
+                    <select id="editGender" name="gender" class="form-control" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-submit">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- EDIT MODAL -->
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-    
-    document.addEventListener('DOMContentLoaded', function () {
-    // Variables
-    const editMemberModal = document.getElementById('editMemberModal');
-    const editMemberForm = document.getElementById('editMemberForm');
-    const closeModal = document.querySelector('.close');
-    const cancelEditBtn = document.getElementById('cancelBtn');
-    const skChairmanTable = document.getElementById('skChairmanTable');
+        document.addEventListener('DOMContentLoaded', function () {
+            const editMemberModal = document.getElementById('editMemberModal');
+            const editMemberForm = document.getElementById('editMemberForm');
+            const closeModal = document.querySelector('.close');
+            const cancelEditBtn = document.getElementById('cancelBtn');
+            const skChairmanTable = document.getElementById('skChairmanTable');
+            const searchInput = document.getElementById('searchInput');
 
-    // Event listener for table row click
-    skChairmanTable.addEventListener('click', function (e) {
-    const target = e.target.closest('tr');
-    if (target) {
-        document.getElementById('editId').value = target.dataset.id;
-        document.getElementById('editFirstname').value = target.dataset.firstname;
-        document.getElementById('editMiddlename').value = target.dataset.middlename;
-        document.getElementById('editLastname').value = target.dataset.lastname;
-        document.getElementById('editBirthday').value = target.dataset.birthday;
-        document.getElementById('editAddress').value = target.dataset.address;
-        document.getElementById('editMaritalStatus').value = target.dataset.marital_status;
-        document.getElementById('editBarangay').value = target.dataset.barangay;
-        document.getElementById('editContactNumber').value = target.dataset.contact_number;
-        document.getElementById('editEmail').value = target.dataset.email;
-        document.getElementById('editGender').value = target.dataset.gender;
+            let timerId; // Timer ID for debounce
 
-        // Open the edit modal
-        editMemberModal.style.display = 'block';
-    }
-});
-
-    // Event listener for closing the modal
-    closeModal.addEventListener('click', function () {
-        editMemberModal.style.display = 'none';
-    });
-
-    // Event listener for cancelling edit
-    cancelEditBtn.addEventListener('click', function () {
-        editMemberModal.style.display = 'none';
-    });
-
-    // Event listener for submitting the edit form
-    editMemberForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const formData = new FormData(editMemberForm);
-        // Send the data to the server using fetch
-        fetch('update_member.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire('Success', 'SK Chairman details updated successfully', 'success').then(() => {
-                    location.reload(); // Reload the page
-                });
-            } else {
-                Swal.fire('Error', 'Failed to update SK Chairman details', 'error');
+            // Function to handle search input change
+            function handleSearchInput() {
+                clearTimeout(timerId); // Clear previous timer
+                timerId = setTimeout(performSearch, 500); // Set a new timer for 500ms delay
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire('Error', 'An error occurred while updating the SK Chairman details', 'error');
+
+            // Function to perform search
+            function performSearch() {
+                const searchValue = searchInput.value.trim();
+                const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
+                const url = `?search=${searchValue}&page=${currentPage}`;
+                window.location.href = url;
+            }
+
+            // Event listener for table row click (unchanged from original code)
+            skChairmanTable.addEventListener('click', function (e) {
+                const target = e.target.closest('tr');
+                if (target) {
+                    document.getElementById('editId').value = target.dataset.id;
+                    document.getElementById('editFirstname').value = target.dataset.firstname;
+                    document.getElementById('editMiddlename').value = target.dataset.middlename;
+                    document.getElementById('editLastname').value = target.dataset.lastname;
+                    document.getElementById('editBirthday').value = target.dataset.birthday;
+                    document.getElementById('editAddress').value = target.dataset.address;
+                    document.getElementById('editMaritalStatus').value = target.dataset.marital_status;
+                    document.getElementById('editBarangay').value = target.dataset.barangay;
+                    document.getElementById('editContactNumber').value = target.dataset.contact_number;
+                    document.getElementById('editEmail').value = target.dataset.email;
+                    document.getElementById('editGender').value = target.dataset.gender;
+
+                    editMemberModal.style.display = 'block';
+                }
+            });
+
+            // Event listener for closing the modal (unchanged from original code)
+            closeModal.addEventListener('click', function () {
+                editMemberModal.style.display = 'none';
+            });
+
+            // Event listener for cancelling edit (unchanged from original code)
+            cancelEditBtn.addEventListener('click', function () {
+                editMemberModal.style.display = 'none';
+            });
+
+            // Event listener for submitting the edit form (unchanged from original code)
+            editMemberForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const formData = new FormData(editMemberForm);
+                fetch('update_member.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('Success', 'SK Chairman details updated successfully', 'success').then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire('Error', 'Failed to update SK Chairman details', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error', 'An error occurred while updating the SK Chairman details', 'error');
+                });
+            });
+
+            // Event listener for search input (auto-trigger search on input change)
+            searchInput.addEventListener('input', handleSearchInput);
         });
-    });
-
-    // Event listener for search functionality
-    const searchBtn = document.getElementById('searchBtn');
-    const searchInput = document.getElementById('searchInput');
-
-    searchBtn.addEventListener('click', function () {
-        const searchValue = searchInput.value.trim();
-        window.location.href = `?search=${searchValue}`;
-    });
-});
-
-</script>
-
+    </script>
+    <!-- SCRIPTS -->
 </body>
 </html>
+
+<?php
+// Close database connection
+$conn->close();
+?>
