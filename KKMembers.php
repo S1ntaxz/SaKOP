@@ -316,5 +316,6 @@ if (isset($_SESSION['email']) && isset($_SESSION['userid'])) {
             });
         });
     </script>
+    <script src="script.js"></script>
 </body>
 </html>

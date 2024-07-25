@@ -138,10 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="form-group">
                     <input type="password" class="form-control transparent" id="password" name="password" placeholder="Enter password" required>
                     </div>
-                    <div class="form-group form-check">
-                    <input type="checkbox" class="form-check-input" id="rememberMe">
-                    <label class="form-check-label" for="rememberMe">Remember me</label>
-                    </div>
+                    
                     <button type="submit" class="btn btn-block" style="background-color: #30334e; color: white;">Submit</button>
                     <a href="forgot_password.php" class="d-block text-center mt-2" style="color: #30334e;">Forgot password?</a>
                 </form>

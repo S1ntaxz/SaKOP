@@ -55,6 +55,26 @@ if (isset($_SESSION['email']) && isset($_SESSION['userid'])) {
     $result_young_adult = $conn->query($sql_young_adult);
     $young_adult_count = ($result_young_adult->num_rows > 0) ? $result_young_adult->fetch_assoc()['count'] : 0;
 
+    // Hardcoded Current Programs
+    $current_programs = array(
+        array(
+            'title' => 'Current Program 1',
+            'description' => 'Description of Current Program 1',
+        ),
+    );
+
+    // Hardcoded Past Programs
+    $past_programs = array(
+        array(
+            'title' => 'Past Program 1',
+            'description' => 'Description of Past Program 1',
+        ),
+        array(
+            'title' => 'Past Program 2',
+            'description' => 'Description of Past Program 2',
+        ),
+    );
+
     $conn->close();
 } else {
     // Redirect to login page if not logged in
@@ -68,75 +88,123 @@ if (isset($_SESSION['email']) && isset($_SESSION['userid'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Boxicons -->
+    <title>SaKOP Dashboard</title>
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-    <!-- My CSS -->
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="head.png" type="image/x-icon">
-    <title>SaKOP</title>
+    <style>
+        /* Custom CSS for program section */
+        .program-section {
+            margin-bottom: 30px;
+        }
+
+        .program-section h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .program-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .program-item {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .program-item h3 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .program-item p {
+            color: #666;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- SIDEBAR -->
-    <section id="sidebar">
-        <?php include 'sidebar2.php'; ?>
-    </section>
-    <!-- SIDEBAR -->
+    <div class="container">
+        <section id="sidebar">
+            <?php include 'sidebar2.php'; ?>
+        </section>
 
-    <!-- CONTENT -->
-    <section id="content">
-        <!-- NAVBAR -->
-        <?php include 'topbar.php'; ?>
-        <!-- NAVBAR -->
+        <section id="content">
+            <?php include 'topbar.php'; ?>
 
-        <!-- MAIN -->
-        <main>
-            <div class="head-title">
-                <div class="left">
-                    <h1>Welcome SK Chairman <?php echo $firstname; ?>!</h1>
-                    <p>Barangay <?php echo $barangay; ?>, Nasugbu, Batangas</p>
-                    <ul class="breadcrumb">
-                        <li>
-                            <a href="#">SK Chairman</a>
-                        </li>
-                        <li><i class='bx bx-chevron-right'></i></li>
-                        <li>
-                            <a class="active" href="#">Dashboard</a>
-                        </li>
-                    </ul>
+            <main>
+                <div class="head-title">
+                    <div class="left">
+                        <h1>Welcome SK Chairman <?php echo $firstname; ?>!</h1>
+                        <p>Barangay <?php echo $barangay; ?>, Nasugbu, Batangas</p>
+                        <ul class="breadcrumb">
+                            <li><a href="#">SK Chairman</a></li>
+                            <li><i class='bx bx-chevron-right'></i></li>
+                            <li><a class="active" href="#">Dashboard</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
 
-            <ul class="box-info">
-        <li>
-            <i class='bx bxs-group'></i>
-            <span class="text">
-                <h3><?php echo $child_youth_count; ?></h3>
-                <p>Child Youth</p>
-            </span>
-        </li>
-        <li>
-            <i class='bx bxs-group'></i>
-            <span class="text">
-                <h3><?php echo $core_youth_count; ?></h3>
-                <p>Core Youth</p>
-            </span>
-        </li>
-        <li>
-            <i class='bx bxs-group'></i>
-            <span class="text">
-                <h3> <?php echo $young_adult_count; ?></h3>
-                <p>Young Adult</p>
-            </span>
-        </li>
-    </ul>
+                <ul class="box-info">
+                    <li>
+                        <i class='bx bxs-group'></i>
+                        <span class="text">
+                            <h3><?php echo $child_youth_count; ?></h3>
+                            <p>Child Youth</p>
+                        </span>
+                    </li>
+                    <li>
+                        <i class='bx bxs-group'></i>
+                        <span class="text">
+                            <h3><?php echo $core_youth_count; ?></h3>
+                            <p>Core Youth</p>
+                        </span>
+                    </li>
+                    <li>
+                        <i class='bx bxs-group'></i>
+                        <span class="text">
+                            <h3><?php echo $young_adult_count; ?></h3>
+                            <p>Young Adult</p>
+                        </span>
+                    </li>
+                </ul>
 
-            <!-- Other content here -->
+                <!-- Current Programs -->
+                <section class="program-section">
+                    <h2>Current Programs</h2>
+                    <div class="program-container">
+                        <?php foreach ($current_programs as $program): ?>
+                            <div class="program-item">
+                                <h3><?php echo $program['title']; ?></h3>
+                                <p><?php echo $program['description']; ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
 
-        </main>
-        <!-- MAIN -->
-    </section>
-    <!-- CONTENT -->
+                <!-- Past Programs -->
+                <section class="program-section">
+                    <h2>Past Programs</h2>
+                    <div class="program-container">
+                        <?php foreach ($past_programs as $program): ?>
+                            <div class="program-item">
+                                <h3><?php echo $program['title']; ?></h3>
+                                <p><?php echo $program['description']; ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+
+            </main>
+        </section>
+    </div>
 
     <script src="script.js"></script>
 </body>

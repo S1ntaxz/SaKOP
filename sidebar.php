@@ -1,6 +1,7 @@
 <?php
 // Get the current file name
 $current_page = basename($_SERVER['PHP_SELF']);
+$addskpages = ['SKChairman.php', 'add_sk_interface.php']; // Add all relevant pages here
 ?>
 
 <a href="#" class="brand">
@@ -13,22 +14,22 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <span class="text">Dashboard</span>
         </a>
     </li>
-    <li class="<?php echo $current_page == 'SKChairman.php' ? 'active' : ''; ?>">
+    <li class="<?php echo in_array($current_page, $addskpages) ? 'active' : ''; ?>">
         <a href="SKChairman.php">
             <i class='bx bxs-shopping-bag-alt'></i>
             <span class="text">SK Chairman</span>
-        </a>
-    </li>
-    <li class="<?php echo $current_page == 'Budget.php' ? 'active' : ''; ?>">
-        <a href="Budget.php">
-            <i class='bx bxs-doughnut-chart'></i>
-            <span class="text">Budget Allocation</span>
         </a>
     </li>
     <li class="<?php echo $current_page == 'Docu.php' ? 'active' : ''; ?>">
         <a href="Docu.php">
             <i class='bx bxs-message-dots'></i>
             <span class="text">Document Management</span>
+        </a>
+    </li>
+    <li class="<?php echo $current_page == 'Budget.php' ? 'active' : ''; ?>">
+        <a href="Budget.php">
+            <i class='bx bxs-doughnut-chart'></i>
+            <span class="text">Budget Allocation</span>
         </a>
     </li>
     <li class="<?php echo $current_page == 'Program.php' ? 'active' : ''; ?>">
@@ -39,7 +40,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
     </li>
 </ul>
 <ul class="side-menu">
-    
     <li>
         <a href="index.php" class="logout">
             <i class='bx bxs-log-out-circle'></i>

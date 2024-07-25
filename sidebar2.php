@@ -1,6 +1,9 @@
 <?php
 // Get the current file name
 $current_page = basename($_SERVER['PHP_SELF']);
+$addkkpages = ['KKMembers.php', 'addkkinterface.php'];
+$budgetpages = ['SKBudget.php', 'view_history.php']; 
+$docupages = ['SKDocu.php', 'SKdocuadd.php']; 
 ?>
 
 <a href="#" class="brand">
@@ -13,19 +16,19 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <span class="text">Dashboard</span>
         </a>
     </li>
-    <li class="<?php echo $current_page == 'KKMembers.php' ? 'active' : ''; ?>">
+    <li class="<?php echo in_array($current_page, $addkkpages) ? 'active' : ''; ?>">
         <a href="KKMembers.php">
             <i class='bx bxs-shopping-bag-alt'></i>
             <span class="text">KK Members</span>
         </a>
     </li>
-    <li class="<?php echo $current_page == 'SKBudget.php' ? 'active' : ''; ?>">
+    <li class="<?php echo in_array($current_page, $budgetpages) ? 'active' : ''; ?>">
         <a href="SKBudget.php">
             <i class='bx bxs-doughnut-chart'></i>
             <span class="text">Budget Allocation</span>
         </a>
     </li>
-    <li class="<?php echo $current_page == 'SKDocu.php' ? 'active' : ''; ?>">
+    <li class="<?php echo in_array($current_page, $docupages) ? 'active' : ''; ?>">
         <a href="SKDocu.php">
             <i class='bx bxs-message-dots'></i>
             <span class="text">Document Management</span>

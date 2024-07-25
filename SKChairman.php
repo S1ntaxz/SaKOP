@@ -442,6 +442,8 @@ $maritalStatuses = ['Single', 'Married', 'Widowed', 'Separated'];
         });
     </script>
     <!-- SCRIPTS -->
+
+    <script src="script.js"></script>
 </body>
 </html>
 

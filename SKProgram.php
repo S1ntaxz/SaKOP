@@ -432,5 +432,23 @@
             loadPrograms();
         });
     </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.querySelector('.side-menu');
+    const toggleButton = document.querySelector('.toggle-sidebar'); // Adjust selector as needed
+
+    toggleButton.addEventListener('click', function() {
+        if (sidebar.classList.contains('collapsed')) {
+            sidebar.classList.remove('collapsed');
+            sidebar.classList.add('expanded');
+        } else {
+            sidebar.classList.remove('expanded');
+            sidebar.classList.add('collapsed');
+        }
+    });
+});
+</script>
+<script src="script.js"></script>
 </body>
 </html>
